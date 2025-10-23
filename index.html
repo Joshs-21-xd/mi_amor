@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Para ti, mi amor ❤️</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      background: radial-gradient(circle at top, #1b1032, #05020a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+    }
+
+    /* Contenedor del corazón */
+    .heart-container {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+
+    /* Corazón */
+    .heart {
+      position: relative;
+      width: 150px;
+      height: 130px;
+      background-color: #ff5c8a;
+      transform: rotate(-45deg);
+      margin: 0 auto;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(255, 100, 140, 0.6);
+      transition: transform 0.3s ease, opacity 0.5s ease;
+      touch-action: manipulation;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 150px;
+      height: 130px;
+      background-color: #ff5c8a;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -75px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 75px;
+      top: 0;
+    }
+
+    .heart.pulse {
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: rotate(-45deg) scale(1); }
+      50% { transform: rotate(-45deg) scale(1.1); }
+      100% { transform: rotate(-45deg) scale(1); }
+    }
+
+    .instruction {
+      color: white;
+      font-size: 18px;
+      margin-top: 20px;
+      opacity: 0.9;
+      user-select: none;
+    }
+
+    /* Carta */
+    .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 95%;
+      max-width: 800px;
+      height: 90vh;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.2), 0 10px 30px rgba(0,0,0,0.5);
+      padding: 40px 25px;
+      opacity: 0;
+      transition: all 0.7s ease;
+      overflow-y: auto;
+      z-index: 1;
+    }
+
+    .card.open {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #2d1f16;
+      text-align: justify;
+      white-space: pre-wrap;
+    }
+
+    .signature {
+      text-align: right;
+      margin-top: 20px;
+      font-style: italic;
+      color: #6b3a2a;
+      opacity: 0;
+      transition: opacity 1s ease;
+      font-size: 14px;
+    }
+
+    /* Ajustes móviles */
+    @media (max-width: 600px) {
+      .heart {
+        width: 120px;
+        height: 100px;
+      }
+
+      .heart::before,
+      .heart::after {
+        width: 120px;
+        height: 100px;
+      }
+
+      .heart::before {
+        top: -60px;
+      }
+
+      .heart::after {
+        left: 60px;
+      }
+
+      .instruction {
+        font-size: 16px;
+      }
+
+      .card {
+        width: 96%;
+        height: 92vh;
+        padding: 30px 20px;
+      }
+
+      .card p {
+        font-size: 13px;
+      }
+
+      .signature {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="heart-container">
+    <div class="heart pulse" id="heart"></div>
+    <div class="instruction" id="instruction">Toca el corazón, mi amor 💖</div>
+  </div>
+
+  <div class="card" id="card">
+    <p id="text"></p>
+    <div class="signature" id="signature">Con amor, tu novio Josh 💖</div>
+  </div>
+
+  <audio id="audio" src="music.mp3" preload="auto"></audio>
+
+  <script>
+    const heart = document.getElementById("heart");
+    const instruction = document.getElementById("instruction");
+    const card = document.getElementById("card");
+    const textEl = document.getElementById("text");
+    const signature = document.getElementById("signature");
+    const audio = document.getElementById("audio");
+
+    const carta = `Mi amor,
+
+A veces los días se hacen largos, las fuerzas flaquean y el ánimo parece desaparecer, pero quiero que sepas que yo siempre estoy contigo, incluso cuando no pueda estar a tu lado físicamente. 
+Tu sonrisa, tu esfuerzo y tu forma de seguir adelante me llenan de orgullo cada día.
+
+Eres una persona increíble, valiente y llena de luz, aunque a veces no lo veas. 
+No necesitas ser perfecta para que te admire; me basta con verte intentando, soñando y creyendo, porque eso es lo que te hace única.
+
+Gracias por existir, por hacer mi vida más bonita, por darme razones para sonreír incluso en los días difíciles. 
+Si pudiera, te abrazaría ahora mismo y no te soltaría nunca, solo para que sintieras lo mucho que te quiero y lo importante que eres para mí.
+
+Nunca olvides que no importa la distancia o el silencio de algunos días, mi cariño por ti sigue intacto, firme, esperándote con el mismo amor de siempre.
+
+💖`;
+
+    function typeText(text, el, speed = 18, cb) {
+      el.textContent = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        el.textContent += text[i] || "";
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (cb) cb();
+        }
+      }, speed);
+    }
+
+    heart.addEventListener("click", () => {
+      heart.style.pointerEvents = "none"; // evita doble toque
+      heart.style.opacity = "0";
+      heart.style.transform = "scale(0)";
+      instruction.style.opacity = "0";
+
+      try { audio.play(); } catch (e) {}
+
+      setTimeout(() => {
+        card.classList.add("open");
+        typeText(carta, textEl, 18, () => {
+          signature.style.opacity = "1";
+        });
+      }, 500);
+    });
+  </script>
+</body>
+</html>
+
